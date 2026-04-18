@@ -1,15 +1,9 @@
-from agents import LLMAgent
+from agents.stock.graph import build_stock_graph
 
-_agent = LLMAgent(
-    system_prompt=(
-        "You are a concise stock analyst. "
-        "Given a stock name, provide a brief one-paragraph overview of the company "
-        "and any notable recent context you know about it. "
-        "Do not make up prices or specific financial figures."
-    )
-)
+_graph = build_stock_graph()
 
 
 def handle_stock(payload: dict) -> str:
     stock_name = payload.get("stock_name", "unknown")
-    return _agent.invoke(f"Give me a brief overview of: {stock_name}")
+    result = _graph.invoke({"stock_name": stock_name})
+    return result["analysis"]
